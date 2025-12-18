@@ -1,37 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hotstar-app
-  labels:
-    app: hotstar-app
+  name: hotstar-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: hotstar-app
+      app: hotstar
   template:
     metadata:
       labels:
-        app: hotstar-app
+        app: hotstar
     spec:
       containers:
-        - name: hotstar-app
-          image: abhipsapriyadarshinisahoo/hotstar-devops-project-nodejs
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 3000
-
+      - name: hotstar-container
+        image: abhipsapriyadarshinisahoo/hotstar-devops-project-nodejs
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: hotstar-service
+  name: hotstar-lb
 spec:
   type: LoadBalancer
   selector:
-    app: hotstar-app
+    app: hotstar
   ports:
-    - protocol: TCP
-      port: 3000
-      targetPort: 3000
+  - port: 80
+    targetPort: 3000

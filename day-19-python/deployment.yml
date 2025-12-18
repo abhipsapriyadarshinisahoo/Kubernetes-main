@@ -1,54 +1,63 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: httpd-html
-data:
-  index.html: |
-    <html>
-      <head>
-        <title>Welcome</title>
-      </head>
-      <body>
-        <h1>hello</h1>
-      </body>
-    </html>
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: httpd-deployment
+  name: hotstar-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: httpd
+      app: hotstar
   template:
     metadata:
       labels:
-        app: httpd
+        app: hotstar
     spec:
       containers:
-      - name: httpd
-        image: httpd:2.4
+      - name: hotstar-container
+        image: apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotstar-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hotstar
+  template:
+    metadata:
+      labels:
+        app: hotstar
+    spec:
+      containers:
+      - name: hotstar-container
+        image: abhipsapriyadarshinisahoo/hotstar-devops-project-nodejs
+        imagePullPolicy: Always
         ports:
-        - containerPort: 80
-        volumeMounts:
-        - name: html-volume
-          mountPath: /usr/local/apache2/htdocs/index.html
-          subPath: index.html
-      volumes:
-      - name: html-volume
-        configMap:
-          name: httpd-html
+        - containerPort: 3000
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: httpd-service
+  name: hotstar-lb
 spec:
   type: LoadBalancer
   selector:
-    app: httpd
+    app: hotstar
   ports:
   - port: 80
-    targetPort: 80
+    targetPort: 3000
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotstar-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: hotstar
+  ports:
+  - port: 80
+    targetPort: 3000
